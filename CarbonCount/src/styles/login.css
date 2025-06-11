@@ -1,30 +1,117 @@
-.login-container {
-  background: linear-gradient(to right, #d6f5d6, #e0f7ec);
+/* Reset dan fix layout */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.login-card {
-  width: 90%;
-  max-width: 900px;
-  background-color: white;
-}
-
-.image-side {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 50%;
-}
-
-.form-side {
+html, body {
+  height: 100%;
   width: 100%;
-  max-width: 450px;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
 }
 
-.hexagon-img {
-  max-width: 100%;
-  clip-path: polygon(
-    25% 6.7%, 75% 6.7%,
-    100% 50%, 75% 93.3%,
-    25% 93.3%, 0% 50%
-  );
+/* Container full layar */
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100vw;
+  background: url('/carbon.png') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Card form */
+.login-card {
+  padding: 32px;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 400px;
+  border-radius: 12px;
+  color: #222;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+}
+
+.login-card h2 {
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 30px;
+}
+
+form label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f7f7f7;
+}
+
+.password-wrapper {
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 14px;
+  top: 9px;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 40px;
+  background: linear-gradient(to right, #5ac488, #39b984);
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background: linear-gradient(to right, #49b57a, #2e9f6e);
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+}
+
+/* Responsif untuk layar kecil */
+@media (max-width: 768px) {
+  .login-card {
+    padding: 24px;
+    max-width: 90%;
+  }
+
+  form input, button {
+    font-size: 15px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
 }
