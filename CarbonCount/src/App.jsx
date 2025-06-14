@@ -3,6 +3,7 @@ import Login from './pages/login';
 import Register from './pages/register';
 import Dashboard from './pages/dashboard';
 import EmissionInput from './pages/EmissionInput';
+import EmissionHistory from './pages/EmissionHistory';
 import './App.css';
 
 function App() {
