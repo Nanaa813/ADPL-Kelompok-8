@@ -5,6 +5,7 @@ import Dashboard from './pages/dashboard';
 import EmissionInput from './pages/EmissionInput';
 import EmissionHistory from './pages/EmissionHistory';
 import Layout from './components/layout'; 
+import Tips from './pages/tips';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/input" element={<EmissionInput />} />
           <Route path="/history" element={<EmissionHistory />} />
+          <Route path="/tips" element={<Tips />} />
         </Route>
       </Routes>
     </Router>

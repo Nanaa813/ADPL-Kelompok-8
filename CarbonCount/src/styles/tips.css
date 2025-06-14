@@ -1,0 +1,51 @@
+.tips-page {
+  font-family: 'Arial', sans-serif;
+  color: #222;
+}
+
+.tips-page h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+  color: #118d64;
+}
+
+.tips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.tips-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  padding: 24px;
+  width: 280px;
+  max-width: 100%;
+  transition: transform 0.2s ease;
+}
+
+.tips-card:hover {
+  transform: translateY(-4px);
+}
+
+.tips-card h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 14px;
+  color: #1e824c;
+}
+
+.tips-card ul {
+  padding-left: 16px;
+  margin: 0;
+}
+
+.tips-card li {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
