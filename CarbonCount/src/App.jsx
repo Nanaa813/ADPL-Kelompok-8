@@ -4,7 +4,7 @@ import Register from './pages/register';
 import Dashboard from './pages/dashboard';
 import EmissionInput from './pages/EmissionInput';
 import EmissionHistory from './pages/EmissionHistory';
-import Layout from './Layout'; // layout baru
+import Layout from './layout'; // layout baru
 
 function App() {
   return (
