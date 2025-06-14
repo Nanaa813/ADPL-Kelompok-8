@@ -1,25 +1,28 @@
-.dashboard-wrapper {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
-  font-family: 'Arial', sans-serif;
-  background-size: cover;
-  padding: 24px;
-  gap: 24px;
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
+/* === RESET DASAR === */
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+}
+
+/* === WRAPPER UTAMA === */
+.dashboard-wrapper {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background-size: cover;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* === SIDEBAR === */
 .sidebar {
-  height: 100%;
-  min-height: 100vh;
   width: 240px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px);
@@ -30,6 +33,7 @@ html, body {
   justify-content: space-between;
   padding: 24px 16px;
   height: 100%;
+  box-sizing: border-box;
 }
 
 .sidebar .logo {
@@ -67,25 +71,48 @@ html, body {
   color: #118d64;
 }
 
-/* ACTIVE LINK — untuk NavLink */
 .sidebar ul li a.active {
   background-color: #118d64;
   color: white;
   font-weight: bold;
 }
 
-/* === KONTEN UTAMA === */
-.main-content {
+/* === LOGOUT BUTTON === */
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #222;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background-color: rgba(144, 238, 144, 0.2);
+  color: #118d64;
+}
+
+/* === KONTEN UTAMA WRAPPER + BODY === */
+.main-content-wrapper {
   flex: 1;
-  min-width: 0;
+  height: 100%;
+  padding: 24px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.main-content {
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(16px);
   border-radius: 20px;
   padding: 30px 40px;
   box-sizing: border-box;
-  overflow-y: auto;
-  padding-bottom: 60px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  min-height: 100%;
 }
 
 /* === TOPBAR === */
@@ -200,27 +227,4 @@ html, body {
   padding: 20px;
   font-weight: 500;
   font-size: 16px;
-}
-
-/* === LOGOUT BUTTON === */
-.logout-btn {
-  background: none;
-  border: none;
-  padding: 10px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  color: #222;
-  transition: all 0.3s ease;
-  width: 100%;
-}
-
-.logout-btn:hover {
-  background-color: rgba(144, 238, 144, 0.2);
-  color: #118d64;
-}
-
-#root {
-  height: 100%;
 }

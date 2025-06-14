@@ -81,6 +81,7 @@ const EmissionHistory = () => {
         </div>
 
         <div className="chart-box">
+          <h5>Emissions by Category</h5>
           <Pie data={pieData} />
         </div>
       </section>
