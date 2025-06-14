@@ -59,7 +59,8 @@
   color: #118d64;
 }
 
-.sidebar li.active a {
+/* ACTIVE LINK — untuk NavLink */
+.sidebar ul li a.active {
   background-color: #118d64;
   color: white;
   font-weight: bold;
@@ -191,6 +192,7 @@
   font-size: 16px;
 }
 
+/* === LOGOUT BUTTON === */
 .logout-btn {
   background: none;
   border: none;
