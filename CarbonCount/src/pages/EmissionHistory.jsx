@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -17,7 +17,7 @@ import "../styles/emission-history.css";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EmissionHistory = () => {
-  const [data, setData] = useState([
+  const [data] = useState([
     {
       date: "31 Mei 2025",
       category: "Konsumsi Makanan",
@@ -69,28 +69,28 @@ const EmissionHistory = () => {
   };
 
   return (
-    <div className="emission-history">
-      <div className="header">
-        <h2>Emission History</h2>
-        <FaDownload className="icon" title="Download" />
-      </div>
-
-      <div className="summary-section">
+    <>
+      <section className="summary-section">
         <div className="summary-box">
-          <h4>Ringkasan Emisi Bulan Ini</h4>
-          <p>Total Emisi: <strong>{totalEmission} kg CO₂</strong></p>
+          <div className="header">
+            <h2>Emission History</h2>
+            <FaDownload className="icon" title="Download" />
+          </div>
+          <p>Total Emisi Bulan Ini: <strong>{totalEmission} kg CO₂</strong></p>
           <p>Dibanding bulan lalu: ⬇️ −2.4 kg CO₂ (lebih rendah)</p>
         </div>
+
         <div className="chart-box">
           <Pie data={pieData} />
         </div>
-      </div>
+      </section>
 
-      <div className="table-section">
+      <section className="table-section">
         <div className="table-header">
           <h4>Riwayat Aktivitas</h4>
           <FaFilter className="icon" />
         </div>
+
         <table>
           <thead>
             <tr>
@@ -118,8 +118,8 @@ const EmissionHistory = () => {
             ))}
           </tbody>
         </table>
-      </div>
-    </div>
+      </section>
+    </>
   );
 };
 

@@ -1,29 +1,27 @@
-/* Layout wrapper */
+/* === WRAPPER UTAMA === */
 .dashboard-wrapper {
   display: flex;
+  width: 100%;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  
   background-size: cover;
-  padding: 20px;
-  gap: 20px;
+  padding: 24px;
+  gap: 24px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
+/* === SIDEBAR === */
 .sidebar {
-  width: 220px;
+  width: 240px;
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(16px);
   border-radius: 20px;
   color: #222;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* penting */
+  justify-content: space-between;
   padding: 24px 16px;
-}
-
-.nav-main ul, .nav-bottom ul {
-  list-style: none;
-  padding: 0;
 }
 
 .sidebar .logo {
@@ -36,27 +34,28 @@
 .sidebar ul {
   list-style: none;
   padding: 0;
+  margin: 0;
   width: 100%;
 }
 
 .sidebar li {
-  margin: 10px 0;
+  margin: 8px 0;
   font-size: 14px;
   text-align: center;
 }
 
 .sidebar li a {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
   text-decoration: none;
   color: #222;
   font-weight: 500;
-  display: block;
-  padding: 8px 10px;
-  border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .sidebar li a:hover {
-  background-color: rgba(144, 238, 144, 0.3);
+  background-color: rgba(144, 238, 144, 0.2);
   color: #118d64;
 }
 
@@ -66,8 +65,10 @@
   font-weight: bold;
 }
 
+/* === KONTEN UTAMA === */
 .main-content {
   flex: 1;
+  min-width: 0;
   background-color: rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(16px);
   border-radius: 20px;
@@ -76,7 +77,7 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 }
 
-
+/* === TOPBAR === */
 .topbar {
   display: flex;
   justify-content: space-between;
@@ -106,6 +107,8 @@
 .icon {
   cursor: pointer;
 }
+
+/* === CARD EMISI === */
 .cards-row {
   display: flex;
   gap: 20px;
@@ -116,45 +119,44 @@
   flex: 1;
   padding: 20px;
   border-radius: 20px;
-  font-weight: bold;
-  text-align: left;
+  background-color: #ffffff;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
 }
 
-.card .card-title {
-  font-size: 14px;
-  margin-bottom: 6px;
-  font-weight: 600;
+.card h4 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  color: #333;
 }
 
-.card .card-value {
-  font-size: 28px;
+.card .emission-value {
+  font-size: 24px;
   font-weight: bold;
-  margin: 0;
+  color: #1e8449;
+  margin: 4px 0;
 }
 
-.card .card-value .unit {
-  font-size: 14px;
-  font-weight: normal;
-}
-
-.card .growth {
+.card .emission-change {
   font-size: 13px;
-  margin-top: 6px;
-  font-weight: bold;
+  font-weight: 600;
+  position: absolute;
+  bottom: 16px;
+  right: 20px;
 }
 
-.card .growth.green {
-  color: #2e9f6e;
+.card .emission-change.up {
+  color: #28a745;
 }
 
-.card .growth.red {
-  color: #e45c5c;
+.card .emission-change.down {
+  color: #dc3545;
 }
 
+/* === WARNA CARD (OPSIONAL) === */
 .bg-green {
   background-color: #d8f6f0;
 }
@@ -171,15 +173,15 @@
   background-color: #ffe8e8;
 }
 
-/* Charts Row */
+/* === CHARTS === */
 .charts-row {
   display: flex;
   gap: 20px;
 }
 
-/* Chart Box */
 .chart {
   flex: 1;
+  min-width: 0;
   background-color: #ffffff;
   border-radius: 20px;
   height: 280px;
@@ -187,39 +189,4 @@
   padding: 20px;
   font-weight: 500;
   font-size: 16px;
-}
-
-.emission-card {
-  padding: 18px 24px;
-  text-align: left;
-  position: relative;
-}
-
-.emission-card h4 {
-  margin: 0 0 8px;
-  font-size: 16px;
-  color: #333;
-}
-
-.emission-value {
-  font-size: 24px;
-  font-weight: bold;
-  color: #1e8449;
-  margin: 4px 0;
-}
-
-.emission-change {
-  font-size: 13px;
-  font-weight: 600;
-  position: absolute;
-  bottom: 16px;
-  right: 20px;
-}
-
-.emission-change.up {
-  color: #28a745;
-}
-
-.emission-change.down {
-  color: #dc3545;
 }

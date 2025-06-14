@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import "./styles/dashboard.css";
+import "../styles/dashboard.css";
 import {
   FaSearch,
   FaBell,
@@ -25,7 +25,6 @@ function Layout() {
 
         <div className="nav-bottom">
           <ul>
-            <li><a href="#">Settings</a></li>
             <li><a href="#">Logout</a></li>
           </ul>
         </div>

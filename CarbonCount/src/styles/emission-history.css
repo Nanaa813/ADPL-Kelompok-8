@@ -1,14 +1,19 @@
-.emission-history {
-  padding: 32px;
+/* === EMISSION HISTORY PAGE === */
+.summary-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  margin-bottom: 32px;
   font-family: 'Arial', sans-serif;
   color: #333;
 }
 
+/* === HEADER & DOWNLOAD === */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .header .icon {
@@ -17,30 +22,38 @@
   color: #333;
 }
 
-.summary-section {
-  display: flex;
-  gap: 40px;
-  margin-bottom: 32px;
-}
-
+/* === RINGKASAN EMISI === */
 .summary-box {
+  flex: 1;
   background: #ecfdf5;
   padding: 24px;
   border-radius: 16px;
-  flex: 1;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
+.summary-box h4 {
+  margin-top: 0;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.summary-box p {
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+/* === PIE CHART === */
 .chart-box {
   width: 300px;
   height: 300px;
 }
 
+/* === TABEL RIWAYAT === */
 .table-section {
   background: #f9fefb;
   padding: 20px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .table-header {
@@ -50,9 +63,21 @@
   margin-bottom: 12px;
 }
 
+.table-header h4 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.table-header .icon {
+  font-size: 16px;
+  cursor: pointer;
+  color: #555;
+}
+
 .table-section table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 14px;
 }
 
 .table-section th,

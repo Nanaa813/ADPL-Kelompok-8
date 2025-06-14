@@ -1,42 +1,21 @@
-.emission-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #e7fbe5, #d3f3dc);
-  font-family: Arial, sans-serif;
-  padding: 40px;
-}
-
+/* === WRAPPER HALAMAN INPUT === */
 .content-box {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  gap: 40px;
   background-color: #e8fdea;
   border-radius: 20px;
-  padding: 50px;
+  padding: 40px;
   width: 100%;
-  max-width: 1080px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: Arial, sans-serif;
 }
 
+/* === FORM === */
 .form-box {
   flex: 1;
-  margin-right: 40px;
   max-width: 500px;
-}
-
-.image-box {
-  width: 360px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.image-box img {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
 }
 
 .form-title {
@@ -110,4 +89,18 @@ form {
 
 .submit-button button:hover {
   background: linear-gradient(180deg, #c6efcc, #a8e2b7);
+}
+
+/* === IMAGE BOX === */
+.image-box {
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.image-box img {
+  width: 100%;
+  max-width: 280px;
+  height: auto;
 }
