@@ -23,9 +23,9 @@ body {
 .register-card {
   width: 100%;
   max-width: 360px;
-  max-height: 520px;
+  max-height: 600px;
   padding: 24px 20px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(128, 128, 128, 0.5);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   color: #222;
