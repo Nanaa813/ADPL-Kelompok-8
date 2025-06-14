@@ -1,5 +1,6 @@
 import "../styles/dashboard.css";
 import { FaSearch, FaBell, FaUserCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   return (
@@ -9,13 +10,27 @@ function Dashboard() {
         <h2 className="logo">🌱 CarbonCount</h2>
         <nav>
           <ul>
-            <li className="active">Dashboard</li>
-            <li>Emission Input</li>
-            <li>Emission History</li>
-            <li>Tips</li>
-            <li>Account</li>
-            <li>Settings</li>
-            <li>Logout</li>
+            <li className="active">
+              <Link to="/dashboard">Dashboard</Link>
+            </li>
+            <li>
+              <Link to="/input">Emission Input</Link>
+            </li>
+            <li>
+              <Link to="/history">Emission History</Link>
+            </li>
+            <li>
+              <Link to="/tips">Tips</Link>
+            </li>
+            <li>
+              <Link to="/account">Account</Link>
+            </li>
+            <li>
+              <Link to="/settings">Settings</Link>
+            </li>
+            <li>
+              <Link to="/">Logout</Link>
+            </li>
           </ul>
         </nav>
       </aside>
@@ -35,17 +50,34 @@ function Dashboard() {
           </div>
         </header>
 
-        {/* Content Placeholder */}
+        {/* Statistic Cards */}
         <section className="cards-row">
-          <div className="card">🌍 Total Emissions</div>
-          <div className="card">⚡ Electric</div>
-          <div className="card">🚗 Transport</div>
-          <div className="card">🍽 Food</div>
+          <div className="card stat-card bg-green">
+            <p className="card-title">🌍 Total Emissions Today</p>
+            <h2 className="card-value">6,2 <span className="unit">Kg CO₂</span></h2>
+            <p className="growth green">+18%</p>
+          </div>
+          <div className="card stat-card bg-yellow">
+            <p className="card-title">⚡ Electric Emission</p>
+            <h2 className="card-value">2,1 <span className="unit">Kg CO₂</span></h2>
+            <p className="growth green">+18%</p>
+          </div>
+          <div className="card stat-card bg-blue">
+            <p className="card-title">🚗 Transportation Emissions</p>
+            <h2 className="card-value">3,5 <span className="unit">Kg CO₂</span></h2>
+            <p className="growth green">+18%</p>
+          </div>
+          <div className="card stat-card bg-red">
+            <p className="card-title">🍽 Food Emissions</p>
+            <h2 className="card-value">0,5 <span className="unit">Kg CO₂</span></h2>
+            <p className="growth red">-18%</p>
+          </div>
         </section>
 
+        {/* Charts */}
         <section className="charts-row">
-          <div className="chart">📈 Line Chart</div>
-          <div className="chart">📊 Pie Chart</div>
+          <div className="chart">📈 Emission Usage Graph</div>
+          <div className="chart">📊 Usage Category</div>
         </section>
       </main>
     </div>
