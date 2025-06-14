@@ -1,3 +1,5 @@
+import EmissionsLineChart from "../components/EmissionsLineChart";
+import EmissionsPieChart from "../components/EmissionsPieChart";
 import "../styles/dashboard.css";
 import { FaSearch, FaBell, FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
@@ -79,9 +81,17 @@ function Dashboard() {
 
         {/* Charts */}
         <section className="charts-row">
-          <div className="chart">📈 Emission Usage Graph</div>
-          <div className="chart">📊 Usage Category</div>
+          <div className="chart">
+            <h5>Emissions Over Time</h5>
+            <EmissionsLineChart />
+          </div>
+
+          <div className="chart">
+            <h5>Emissions by Category</h5>
+            <EmissionsPieChart />
+          </div>
         </section>
+
       </main>
     </div>
   );
