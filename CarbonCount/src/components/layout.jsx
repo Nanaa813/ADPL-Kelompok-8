@@ -1,4 +1,4 @@
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate, NavLink } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../firebase-config";
 import "../styles/dashboard.css";
@@ -14,7 +14,7 @@ function Layout() {
   const handleLogout = () => {
     signOut(auth)
       .then(() => {
-        navigate("/"); // redirect ke login
+        navigate("/");
       })
       .catch((error) => {
         console.error("Logout gagal:", error);
@@ -29,15 +29,24 @@ function Layout() {
 
         <div className="nav-main">
           <ul>
-            <li className="active"><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/input">Emission Input</a></li>
-            <li><a href="/history">History</a></li>
-            <li><a href="/tips">Tips</a></li>
-            <li><a href="/account">Account</a></li>
+            <li>
+              <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>Dashboard</NavLink>
+            </li>
+            <li>
+              <NavLink to="/input" className={({ isActive }) => isActive ? "active" : ""}>Emission Input</NavLink>
+            </li>
+            <li>
+              <NavLink to="/history" className={({ isActive }) => isActive ? "active" : ""}>History</NavLink>
+            </li>
+            <li>
+              <NavLink to="/tips" className={({ isActive }) => isActive ? "active" : ""}>Tips</NavLink>
+            </li>
+            <li>
+              <NavLink to="/account" className={({ isActive }) => isActive ? "active" : ""}>Account</NavLink>
+            </li>
           </ul>
         </div>
 
-        {/* Logout only */}
         <div className="nav-bottom">
           <ul>
             <li>
@@ -61,7 +70,6 @@ function Layout() {
           </div>
         </header>
 
-        {/* Halaman akan dimuat di sini */}
         <Outlet />
       </main>
     </div>
