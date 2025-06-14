@@ -52,25 +52,28 @@ function Dashboard() {
 
         {/* Statistic Cards */}
         <section className="cards-row">
-          <div className="card stat-card bg-green">
-            <p className="card-title">🌍 Total Emissions Today</p>
-            <h2 className="card-value">6,2 <span className="unit">Kg CO₂</span></h2>
-            <p className="growth green">+18%</p>
+          <div className="card emission-card">
+            <h4>🌍 Total Emissions</h4>
+            <p className="emission-value">6.2 kg CO₂</p>
+            <span className="emission-change up">+18%</span>
           </div>
-          <div className="card stat-card bg-yellow">
-            <p className="card-title">⚡ Electric Emission</p>
-            <h2 className="card-value">2,1 <span className="unit">Kg CO₂</span></h2>
-            <p className="growth green">+18%</p>
+
+          <div className="card emission-card">
+            <h4>⚡ Electricity</h4>
+            <p className="emission-value">2.1 kg CO₂</p>
+            <span className="emission-change up">+18%</span>
           </div>
-          <div className="card stat-card bg-blue">
-            <p className="card-title">🚗 Transportation Emissions</p>
-            <h2 className="card-value">3,5 <span className="unit">Kg CO₂</span></h2>
-            <p className="growth green">+18%</p>
+
+          <div className="card emission-card">
+            <h4>🚗 Transport</h4>
+            <p className="emission-value">3.5 kg CO₂</p>
+            <span className="emission-change up">+18%</span>
           </div>
-          <div className="card stat-card bg-red">
-            <p className="card-title">🍽 Food Emissions</p>
-            <h2 className="card-value">0,5 <span className="unit">Kg CO₂</span></h2>
-            <p className="growth red">-18%</p>
+
+          <div className="card emission-card">
+            <h4>🍽 Food</h4>
+            <p className="emission-value">0.5 kg CO₂</p>
+            <span className="emission-change down">−18%</span>
           </div>
         </section>
 
