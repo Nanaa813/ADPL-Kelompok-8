@@ -190,3 +190,21 @@
   font-weight: 500;
   font-size: 16px;
 }
+
+.logout-btn {
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #222;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background-color: rgba(144, 238, 144, 0.2);
+  color: #118d64;
+}
