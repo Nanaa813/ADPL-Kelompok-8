@@ -3,7 +3,7 @@
   display: flex;
   min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  background: url('/bg-pattern.png') no-repeat center center fixed;
+  
   background-size: cover;
   padding: 20px;
   gap: 20px;
