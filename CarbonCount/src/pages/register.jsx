@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "../firebase-config";
 import { setDoc, doc } from "firebase/firestore";
 import "../styles/register.css";
@@ -23,7 +23,9 @@ function Register() {
 
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      // Simpan nama ke Firestore
+      // Update displayName di Firebase Auth
+      await updateProfile(userCredential.user, { displayName: name });
+      // Simpan nama & email ke Firestore
       await setDoc(doc(db, "users", userCredential.user.uid), {
         name: name,
         email: email
