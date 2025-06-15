@@ -6,6 +6,7 @@ import EmissionInput from './pages/EmissionInput';
 import EmissionHistory from './pages/EmissionHistory';
 import Layout from './components/layout'; 
 import Tips from './pages/tips';
+import Account from './pages/account';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/input" element={<EmissionInput />} />
           <Route path="/history" element={<EmissionHistory />} />
           <Route path="/tips" element={<Tips />} />
+          <Route path="/account" element={<Account />} />
         </Route>
       </Routes>
     </Router>

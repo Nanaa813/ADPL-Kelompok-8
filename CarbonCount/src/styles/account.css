@@ -1,0 +1,32 @@
+.account-page {
+  font-family: 'Arial', sans-serif;
+  color: #222;
+}
+
+.account-page h2 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #118d64;
+}
+
+.account-card {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
+}
+
+.profile-icon {
+  font-size: 80px;
+  color: #118d64;
+}
+
+.info p {
+  margin: 8px 0;
+  font-size: 16px;
+}

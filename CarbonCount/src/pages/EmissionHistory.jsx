@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -12,56 +12,42 @@ import {
   FaTrash,
   FaFilter
 } from "react-icons/fa";
+import { db } from "../firebase-config";
+import { collection, getDocs } from "firebase/firestore";
 import "../styles/emission-history.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EmissionHistory = () => {
-  const [data] = useState([
-    {
-      date: "31 Mei 2025",
-      category: "Konsumsi Makanan",
-      type: "Ayam Goreng",
-      amount: "250 gram",
-      emission: 2.3
-    },
-    {
-      date: "29 Mei 2025",
-      category: "Transportasi",
-      type: "Naik Motor",
-      amount: "10 km",
-      emission: 1.5
-    },
-    {
-      date: "27 Mei 2025",
-      category: "Konsumsi Listrik",
-      type: "Peralatan Rumah",
-      amount: "5 kWh",
-      emission: 3.8
-    },
-    {
-      date: "25 Mei 2025",
-      category: "Konsumsi Makanan",
-      type: "Tahu Tempe",
-      amount: "300 gram",
-      emission: 0.7
-    },
-    {
-      date: "22 Mei 2025",
-      category: "Transportasi",
-      type: "Naik Sepeda",
-      amount: "5 km",
-      emission: 0.0
-    }
-  ]);
+  const [data, setData] = useState([]);
 
-  const totalEmission = data.reduce((sum, item) => sum + item.emission, 0).toFixed(1);
+  // Ambil data dari Firestore saat komponen dimuat
+  useEffect(() => {
+    const fetchData = async () => {
+      const emissionsCollection = collection(db, "emissions");
+      const snapshot = await getDocs(emissionsCollection);
+      const emissions = snapshot.docs.map(doc => doc.data());
+      setData(emissions);
+    };
+
+    fetchData();
+  }, []);
+
+  const totalEmission = data.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(1);
+
+  const calculatePieData = () => {
+    const food = data.filter(d => d.type === "Makanan").reduce((sum, d) => sum + Number(d.amount), 0);
+    const transport = data.filter(d => d.type === "Transportasi").reduce((sum, d) => sum + Number(d.amount), 0);
+    const electricity = data.filter(d => d.type === "Listrik").reduce((sum, d) => sum + Number(d.amount), 0);
+
+    return [food, transport, electricity];
+  };
 
   const pieData = {
-    labels: ["Konsumsi Makanan", "Transportasi", "Konsumsi Listrik"],
+    labels: ["Makanan", "Transportasi", "Listrik"],
     datasets: [
       {
-        data: [3.0, 1.5, 3.8],
+        data: calculatePieData(),
         backgroundColor: ["#75cda0", "#6466f1", "#aa7dd6"],
         borderWidth: 0
       }
@@ -76,12 +62,11 @@ const EmissionHistory = () => {
             <h2>Emission History</h2>
             <FaDownload className="icon" title="Download" />
           </div>
-          <p>Total Emisi Bulan Ini: <strong>{totalEmission} kg CO₂</strong></p>
-          <p>Dibanding bulan lalu: ⬇️ −2.4 kg CO₂ (lebih rendah)</p>
+          <p>Total Emisi Bulan Ini: <strong>{totalEmission} satuan</strong></p>
+          <p>Dibanding bulan lalu: ⬇️ −2.4 satuan (lebih rendah)</p>
         </div>
 
         <div className="chart-box">
-          <h5>Emissions by Category</h5>
           <Pie data={pieData} />
         </div>
       </section>
@@ -97,9 +82,9 @@ const EmissionHistory = () => {
             <tr>
               <th>Tanggal</th>
               <th>Aktivitas</th>
-              <th>Jenis</th>
+              <th>Detail</th>
               <th>Jumlah</th>
-              <th>Emisi (kg CO₂)</th>
+              <th>Satuan</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -107,10 +92,10 @@ const EmissionHistory = () => {
             {data.map((item, i) => (
               <tr key={i}>
                 <td>{item.date}</td>
-                <td>{item.category}</td>
                 <td>{item.type}</td>
+                <td>{item.detail}</td>
                 <td>{item.amount}</td>
-                <td>{item.emission}</td>
+                <td>{item.unit}</td>
                 <td>
                   <FaEdit className="action-icon" title="Edit" />
                   <FaTrash className="action-icon" title="Hapus" />

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import "../styles/emissioninput.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
+import { db } from "../firebase-config";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function EmissionInput() {
   const [date, setDate] = useState("");
@@ -9,9 +11,30 @@ function EmissionInput() {
   const [amount, setAmount] = useState("");
   const [unit, setUnit] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ date, type, detail, amount, unit });
+
+    try {
+      await addDoc(collection(db, "emissions"), {
+        date,
+        type,
+        detail,
+        amount: parseFloat(amount),
+        unit,
+        createdAt: serverTimestamp()
+      });
+
+      alert("Data emisi berhasil disimpan!");
+      // Reset form
+      setDate("");
+      setType("");
+      setDetail("");
+      setAmount("");
+      setUnit("");
+    } catch (error) {
+      console.error("Gagal menyimpan data:", error);
+      alert("Gagal menyimpan data.");
+    }
   };
 
   return (
@@ -37,9 +60,9 @@ function EmissionInput() {
           <div className="form-group">
             <select value={type} onChange={(e) => setType(e.target.value)} required>
               <option value="">Jenis Aktivitas</option>
-              <option value="transport">Transportasi</option>
-              <option value="electricity">Listrik</option>
-              <option value="food">Makanan</option>
+              <option value="Transportasi">Transportasi</option>
+              <option value="Listrik">Listrik</option>
+              <option value="Makanan">Makanan</option>
             </select>
           </div>
 
