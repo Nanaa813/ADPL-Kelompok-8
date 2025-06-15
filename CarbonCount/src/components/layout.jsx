@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { signOut } from "firebase/auth";
+import { signOut, onAuthStateChanged } from "firebase/auth";
 import { db, auth } from "../firebase-config";
 import { FaSearch, FaBell, FaUserCircle } from "react-icons/fa";
 import "../styles/dashboard.css";
@@ -11,19 +11,20 @@ function Layout() {
   const [displayName, setDisplayName] = useState("");
 
   useEffect(() => {
-    const fetchName = async () => {
-      if (auth.currentUser) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
         // Ambil data user dari Firestore (collection "users", doc id = uid)
-        const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+        const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
-          setDisplayName(userDoc.data().name);
+          setDisplayName(userDoc.data().name || user.displayName || user.email || "User");
         } else {
-          // fallback ke email jika nama tidak ada
-          setDisplayName(auth.currentUser.email);
+          setDisplayName(user.displayName || user.email || "User");
         }
+      } else {
+        setDisplayName("User");
       }
-    };
-    fetchName();
+    });
+    return () => unsubscribe();
   }, []);
 
   const handleLogout = () => {
