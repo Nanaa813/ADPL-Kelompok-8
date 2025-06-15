@@ -9,11 +9,11 @@ import { doc, getDoc } from "firebase/firestore";
 function Layout() {
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       if (user) {
-        // Ambil data user dari Firestore (collection "users", doc id = uid)
         const userDoc = await getDoc(doc(db, "users", user.uid));
         if (userDoc.exists()) {
           setDisplayName(userDoc.data().name || user.displayName || user.email || "User");
@@ -23,6 +23,7 @@ function Layout() {
       } else {
         setDisplayName("User");
       }
+      setLoading(false);
     });
     return () => unsubscribe();
   }, []);
@@ -42,7 +43,6 @@ function Layout() {
       {/* Sidebar */}
       <aside className="sidebar">
         <h2 className="logo">🌱 CarbonCount</h2>
-
         <div className="nav-main">
           <ul>
             <li><a href="/dashboard">Dashboard</a></li>
@@ -52,7 +52,6 @@ function Layout() {
             <li><a href="/account">Account</a></li>
           </ul>
         </div>
-
         <div className="nav-bottom">
           <ul>
             <li>
@@ -66,7 +65,11 @@ function Layout() {
         <div className="main-content">
           <header className="topbar">
             <div className="greeting">
-              <h3>Welcome Back, {displayName || "User"}</h3>
+              <h3>
+                {loading
+                  ? "Loading..."
+                  : `Welcome Back, ${displayName || "User"}`}
+              </h3>
               <p>How much carbon usage do you have today?</p>
             </div>
             <div className="topbar-icons">
@@ -75,7 +78,6 @@ function Layout() {
               <FaUserCircle className="icon" />
             </div>
           </header>
-
           <Outlet />
         </div>
       </main>
