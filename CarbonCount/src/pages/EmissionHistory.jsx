@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getDocs, deleteDoc, doc as docRef, updateDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
@@ -11,6 +11,7 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const EmissionHistory = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -24,18 +25,21 @@ const EmissionHistory = () => {
         where("userId", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);
-      const emissions = querySnapshot.docs.map(doc => doc.data());
+      const emissions = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
       setData(emissions);
       setLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
-  // Fungsi bantu untuk ambil bulan-tahun dari string tanggal
+  // Helper: get month-year from date string
   const getMonthYear = (dateStr) => {
     if (!dateStr) return "";
     const d = new Date(dateStr);
-    return `${d.getFullYear()}-${d.getMonth() + 1}`; // bulan 1-12
+    return `${d.getFullYear()}-${d.getMonth() + 1}`;
   };
 
   const now = new Date();
@@ -43,7 +47,6 @@ const EmissionHistory = () => {
   const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
   const lastMonth = `${lastMonthDate.getFullYear()}-${lastMonthDate.getMonth() + 1}`;
 
-  // Hitung total emisi bulan ini & bulan lalu
   const totalThisMonth = data
     .filter(item => getMonthYear(item.date) === thisMonth)
     .reduce((sum, item) => sum + Number(item.emission || 0), 0);
@@ -84,6 +87,25 @@ const EmissionHistory = () => {
         borderWidth: 0
       }
     ]
+  };
+
+  // Hapus data
+  const handleDelete = async (id) => {
+    if (!window.confirm("Yakin ingin menghapus data ini?")) return;
+    await deleteDoc(docRef(db, "emissions", id));
+    setData(data.filter(item => item.id !== id));
+  };
+
+  // Edit data
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    const { id, ...updateData } = editItem;
+    // Pastikan semua field ada dan bertipe string/number
+    updateData.amount = Number(updateData.amount) || 0;
+    updateData.emission = Number(updateData.emission) || 0;
+    await updateDoc(docRef(db, "emissions", id), updateData);
+    setData(data.map(item => item.id === id ? { ...editItem } : item));
+    setEditItem(null);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -129,16 +151,16 @@ const EmissionHistory = () => {
                 <td colSpan="6" style={{ textAlign: "center" }}>Belum ada data emisi.</td>
               </tr>
             ) : (
-              data.map((item, i) => (
-                <tr key={i}>
-                  <td>{item.date}</td>
-                  <td>{item.category}</td>
-                  <td>{item.detail}</td>
+              data.map((item) => (
+                <tr key={item.id}>
+                  <td>{item.date || "-"}</td>
+                  <td>{item.category || "-"}</td>
+                  <td>{item.detail || "-"}</td>
                   <td>{item.amount} {item.unit}</td>
                   <td>{item.emission}</td>
                   <td>
-                    <FaEdit className="action-icon" title="Edit" />
-                    <FaTrash className="action-icon" title="Hapus" />
+                    <FaEdit className="action-icon" title="Edit" onClick={() => setEditItem({ ...item })} />
+                    <FaTrash className="action-icon" title="Hapus" onClick={() => handleDelete(item.id)} />
                   </td>
                 </tr>
               ))
@@ -146,6 +168,47 @@ const EmissionHistory = () => {
           </tbody>
         </table>
       </section>
+
+      {/* Modal Edit */}
+      {editItem && (
+        <div className="modal-edit" style={{
+          position: "fixed", top: 0, left: 0, right: 0, bottom: 0,
+          background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 1000
+        }}>
+          <form
+            onSubmit={handleEditSubmit}
+            style={{
+              background: "#fff", padding: 24, borderRadius: 8, minWidth: 320, boxShadow: "0 2px 12px rgba(0,0,0,0.12)"
+            }}
+          >
+            <h4>Edit Data Emisi</h4>
+            <label>Tanggal</label>
+            <input type="date" value={editItem.date || ""} onChange={e => setEditItem({ ...editItem, date: e.target.value })} required />
+            <label>Jenis</label>
+            <select value={editItem.category || ""} onChange={e => setEditItem({ ...editItem, category: e.target.value })} required>
+              <option value="Konsumsi Makanan">Konsumsi Makanan</option>
+              <option value="Transportasi">Transportasi</option>
+              <option value="Konsumsi Listrik">Konsumsi Listrik</option>
+            </select>
+            <label>Detail</label>
+            <input type="text" value={editItem.detail || ""} onChange={e => setEditItem({ ...editItem, detail: e.target.value })} required />
+            <label>Jumlah</label>
+            <input type="number" value={editItem.amount || ""} onChange={e => setEditItem({ ...editItem, amount: e.target.value })} required />
+            <label>Satuan</label>
+            <select value={editItem.unit || ""} onChange={e => setEditItem({ ...editItem, unit: e.target.value })} required>
+              <option value="km">KM</option>
+              <option value="kWh">kWh</option>
+              <option value="gram">gram</option>
+            </select>
+            <label>Emisi (kg CO₂)</label>
+            <input type="number" value={editItem.emission || ""} onChange={e => setEditItem({ ...editItem, emission: e.target.value })} required />
+            <div style={{ marginTop: 16, display: "flex", gap: 8 }}>
+              <button type="submit">Simpan</button>
+              <button type="button" onClick={() => setEditItem(null)}>Batal</button>
+            </div>
+          </form>
+        </div>
+      )}
     </>
   );
 };
