@@ -38,7 +38,7 @@ const EmissionsPieChart = ({ data }) => {
   };
 
   return (
-    <div style={{ width: 220, height: 220 }}>
+    <div className="pie-center">
       <Pie
         data={chartData}
         options={{
@@ -47,6 +47,8 @@ const EmissionsPieChart = ({ data }) => {
             legend: { position: "bottom" }
           }
         }}
+        width={280}
+        height={280}
       />
     </div>
   );
