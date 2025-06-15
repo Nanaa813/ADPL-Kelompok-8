@@ -12,92 +12,70 @@ import {
   FaTrash,
   FaFilter
 } from "react-icons/fa";
-import { auth, db } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
-import {
-  collection,
-  onSnapshot,
-  query,
-  where,
-  deleteDoc,
-  doc
-} from "firebase/firestore";
 import "../styles/emission-history.css";
+
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const EmissionHistory = () => {
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Ambil data secara realtime dari Firestore
+  // Ambil data emisi dari Firestore khusus user yang sedang login
   useEffect(() => {
-    let unsubscribe;
-
-    const fetchData = () => {
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          const q = query(collection(db, "emissions"), where("uid", "==", user.uid));
-
-          unsubscribe = onSnapshot(q, (snapshot) => {
-            const emissions = snapshot.docs.map((doc) => ({
-              id: doc.id,
-              ...doc.data(),
-            }));
-            setData(emissions);
-          });
-        }
-      });
+    const fetchEmissions = async () => {
+      if (!auth.currentUser) {
+        setData([]);
+        setLoading(false);
+        return;
+      }
+      const q = query(
+        collection(db, "emissions"),
+        where("userId", "==", auth.currentUser.uid)
+      );
+      const querySnapshot = await getDocs(q);
+      const emissions = querySnapshot.docs.map(doc => doc.data());
+      setData(emissions);
+      setLoading(false);
     };
-
-    fetchData();
-
-    return () => unsubscribe && unsubscribe();
+    fetchEmissions();
   }, []);
 
-  // Total emisi keseluruhan
-  const totalEmission = data
-    .reduce((sum, item) => sum + Number(item.amount || 0), 0)
-    .toFixed(1);
+  // Hitung total emisi
+  const totalEmission = data.reduce((sum, item) => sum + Number(item.emission || 0), 0).toFixed(1);
 
-  // Pie chart data
-  const calculatePieData = () => {
-    const food = data
-      .filter((d) => d.type === "Makanan")
-      .reduce((sum, d) => sum + Number(d.amount), 0);
-    const transport = data
-      .filter((d) => d.type === "Transportasi")
-      .reduce((sum, d) => sum + Number(d.amount), 0);
-    const electricity = data
-      .filter((d) => d.type === "Listrik")
-      .reduce((sum, d) => sum + Number(d.amount), 0);
-
-    return [food, transport, electricity];
+  // Hitung data untuk Pie Chart
+  const categoryTotals = {
+    "Konsumsi Makanan": 0,
+    "Transportasi": 0,
+    "Konsumsi Listrik": 0
   };
+  data.forEach(item => {
+    if (categoryTotals[item.category] !== undefined) {
+      categoryTotals[item.category] += Number(item.emission || 0);
+    }
+  });
 
   const pieData = {
-    labels: ["Makanan", "Transportasi", "Listrik"],
+    labels: ["Konsumsi Makanan", "Transportasi", "Konsumsi Listrik"],
     datasets: [
       {
-        data: calculatePieData(),
+        data: [
+          categoryTotals["Konsumsi Makanan"],
+          categoryTotals["Transportasi"],
+          categoryTotals["Konsumsi Listrik"]
+        ],
         backgroundColor: ["#75cda0", "#6466f1", "#aa7dd6"],
         borderWidth: 0
       }
     ]
   };
 
-  // Fungsi hapus data
-  const handleDelete = async (id) => {
-    const konfirmasi = window.confirm("Yakin ingin menghapus data ini?");
-    if (!konfirmasi) return;
-
-    try {
-      await deleteDoc(doc(db, "emissions", id));
-      alert("Data berhasil dihapus!");
-    } catch (error) {
-      console.error("Gagal hapus:", error);
-      alert("Gagal hapus data.");
-    }
-  };
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -107,11 +85,12 @@ const EmissionHistory = () => {
             <h2>Emission History</h2>
             <FaDownload className="icon" title="Download" />
           </div>
-          <p>Total Emisi Bulan Ini: <strong>{totalEmission} satuan</strong></p>
-          <p>Dibanding bulan lalu: ⬇️ −2.4 satuan (lebih rendah)</p>
+          <p>Total Emisi Bulan Ini: <strong>{totalEmission} kg CO₂</strong></p>
+          <p>Dibanding bulan lalu: ⬇️ −2.4 kg CO₂ (lebih rendah)</p>
         </div>
 
         <div className="chart-box">
+          <h5>Emissions by Category</h5>
           <Pie data={pieData} />
         </div>
       </section>
@@ -127,30 +106,32 @@ const EmissionHistory = () => {
             <tr>
               <th>Tanggal</th>
               <th>Aktivitas</th>
-              <th>Detail</th>
+              <th>Jenis</th>
               <th>Jumlah</th>
-              <th>Satuan</th>
+              <th>Emisi (kg CO₂)</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {data.map((item, i) => (
-              <tr key={i}>
-                <td>{item.date}</td>
-                <td>{item.type}</td>
-                <td>{item.detail}</td>
-                <td>{item.amount}</td>
-                <td>{item.unit}</td>
-                <td>
-                  <FaEdit className="action-icon" title="Edit" />
-                  <FaTrash
-                    className="action-icon"
-                    title="Hapus"
-                    onClick={() => handleDelete(item.id)}
-                  />
-                </td>
+            {data.length === 0 ? (
+              <tr>
+                <td colSpan="6" style={{ textAlign: "center" }}>Belum ada data emisi.</td>
               </tr>
-            ))}
+            ) : (
+              data.map((item, i) => (
+                <tr key={i}>
+                  <td>{item.date}</td>
+                  <td>{item.category}</td>
+                  <td>{item.type}</td>
+                  <td>{item.amount} {item.unit}</td>
+                  <td>{item.emission}</td>
+                  <td>
+                    <FaEdit className="action-icon" title="Edit" />
+                    <FaTrash className="action-icon" title="Hapus" />
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </section>
