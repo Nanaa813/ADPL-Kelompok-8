@@ -1,9 +1,9 @@
 import { useState } from "react";
 import "../styles/emissioninput.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
+
+import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
-import { onAuthStateChanged } from "firebase/auth";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function EmissionInput() {
   const [date, setDate] = useState("");
@@ -14,29 +14,19 @@ function EmissionInput() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const user = auth.currentUser;
-    if (!user) {
-      alert("Kamu harus login terlebih dahulu.");
-      return;
-    }
-
     try {
       await addDoc(collection(db, "emissions"), {
+        userId: auth.currentUser.uid, // simpan UID user
         date,
         type,
         detail,
-        amount: parseFloat(amount),
+        amount,
         unit,
-        uid: user.uid,
-        createdAt: serverTimestamp()
+        createdAt: new Date()
       });
-
-      alert("Data emisi berhasil disimpan!");
-      setDate(""); setType(""); setDetail(""); setAmount(""); setUnit("");
-    } catch (error) {
-      alert("Gagal menyimpan data.");
-      console.error(error);
+      // reset form atau tampilkan pesan sukses
+    } catch (err) {
+      // tampilkan pesan error
     }
   };
 
@@ -63,9 +53,9 @@ function EmissionInput() {
           <div className="form-group">
             <select value={type} onChange={(e) => setType(e.target.value)} required>
               <option value="">Jenis Aktivitas</option>
-              <option value="Transportasi">Transportasi</option>
-              <option value="Listrik">Listrik</option>
-              <option value="Makanan">Makanan</option>
+              <option value="transport">Transportasi</option>
+              <option value="electricity">Listrik</option>
+              <option value="food">Makanan</option>
             </select>
           </div>
 
