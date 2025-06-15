@@ -1,7 +1,8 @@
 import { useState } from "react";
 import "../styles/emissioninput.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
-import { db } from "../firebase-config";
+import { auth, db } from "../firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 function EmissionInput() {
@@ -14,6 +15,12 @@ function EmissionInput() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const user = auth.currentUser;
+    if (!user) {
+      alert("Kamu harus login terlebih dahulu.");
+      return;
+    }
+
     try {
       await addDoc(collection(db, "emissions"), {
         date,
@@ -21,19 +28,15 @@ function EmissionInput() {
         detail,
         amount: parseFloat(amount),
         unit,
+        uid: user.uid,
         createdAt: serverTimestamp()
       });
 
       alert("Data emisi berhasil disimpan!");
-      // Reset form
-      setDate("");
-      setType("");
-      setDetail("");
-      setAmount("");
-      setUnit("");
+      setDate(""); setType(""); setDetail(""); setAmount(""); setUnit("");
     } catch (error) {
-      console.error("Gagal menyimpan data:", error);
       alert("Gagal menyimpan data.");
+      console.error(error);
     }
   };
 

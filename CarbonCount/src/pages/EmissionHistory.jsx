@@ -12,8 +12,16 @@ import {
   FaTrash,
   FaFilter
 } from "react-icons/fa";
-import { db } from "../firebase-config";
-import { collection, getDocs } from "firebase/firestore";
+import { auth, db } from "../firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
+import {
+  collection,
+  onSnapshot,
+  query,
+  where,
+  deleteDoc,
+  doc
+} from "firebase/firestore";
 import "../styles/emission-history.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -21,24 +29,47 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 const EmissionHistory = () => {
   const [data, setData] = useState([]);
 
-  // Ambil data dari Firestore saat komponen dimuat
+  // Ambil data secara realtime dari Firestore
   useEffect(() => {
-    const fetchData = async () => {
-      const emissionsCollection = collection(db, "emissions");
-      const snapshot = await getDocs(emissionsCollection);
-      const emissions = snapshot.docs.map(doc => doc.data());
-      setData(emissions);
+    let unsubscribe;
+
+    const fetchData = () => {
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          const q = query(collection(db, "emissions"), where("uid", "==", user.uid));
+
+          unsubscribe = onSnapshot(q, (snapshot) => {
+            const emissions = snapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setData(emissions);
+          });
+        }
+      });
     };
 
     fetchData();
+
+    return () => unsubscribe && unsubscribe();
   }, []);
 
-  const totalEmission = data.reduce((sum, item) => sum + Number(item.amount || 0), 0).toFixed(1);
+  // Total emisi keseluruhan
+  const totalEmission = data
+    .reduce((sum, item) => sum + Number(item.amount || 0), 0)
+    .toFixed(1);
 
+  // Pie chart data
   const calculatePieData = () => {
-    const food = data.filter(d => d.type === "Makanan").reduce((sum, d) => sum + Number(d.amount), 0);
-    const transport = data.filter(d => d.type === "Transportasi").reduce((sum, d) => sum + Number(d.amount), 0);
-    const electricity = data.filter(d => d.type === "Listrik").reduce((sum, d) => sum + Number(d.amount), 0);
+    const food = data
+      .filter((d) => d.type === "Makanan")
+      .reduce((sum, d) => sum + Number(d.amount), 0);
+    const transport = data
+      .filter((d) => d.type === "Transportasi")
+      .reduce((sum, d) => sum + Number(d.amount), 0);
+    const electricity = data
+      .filter((d) => d.type === "Listrik")
+      .reduce((sum, d) => sum + Number(d.amount), 0);
 
     return [food, transport, electricity];
   };
@@ -52,6 +83,20 @@ const EmissionHistory = () => {
         borderWidth: 0
       }
     ]
+  };
+
+  // Fungsi hapus data
+  const handleDelete = async (id) => {
+    const konfirmasi = window.confirm("Yakin ingin menghapus data ini?");
+    if (!konfirmasi) return;
+
+    try {
+      await deleteDoc(doc(db, "emissions", id));
+      alert("Data berhasil dihapus!");
+    } catch (error) {
+      console.error("Gagal hapus:", error);
+      alert("Gagal hapus data.");
+    }
   };
 
   return (
@@ -98,7 +143,11 @@ const EmissionHistory = () => {
                 <td>{item.unit}</td>
                 <td>
                   <FaEdit className="action-icon" title="Edit" />
-                  <FaTrash className="action-icon" title="Hapus" />
+                  <FaTrash
+                    className="action-icon"
+                    title="Hapus"
+                    onClick={() => handleDelete(item.id)}
+                  />
                 </td>
               </tr>
             ))}
