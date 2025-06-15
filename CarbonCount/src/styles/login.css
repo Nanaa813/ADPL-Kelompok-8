@@ -1,110 +1,153 @@
-body {
-  height: 100vh;
-  width: 100vw;
+body, html {
+  height: 100%;
   margin: 0;
   padding: 0;
-  overflow-y: hidden;
-  background: url('/carbon.png') no-repeat center center;
-  background-size: cover;
   font-family: 'Arial', sans-serif;
 }
 
-.login-page {
-  width: 100%;
-  height: 100vh;
+.login-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: url('/carbon.png') no-repeat center center;
+  background-size: cover;
   display: flex;
-  justify-content: flex-start; 
   align-items: center;
-  padding-left: 0;
-  box-sizing: border-box;
+  justify-content: flex-start;
 }
 
-.login-card {
-  padding: 32px;
-  background-color: rgba(128, 128, 128, 0.5);
-  backdrop-filter: blur(10px);
-  max-width: 400px;
-  width: 100%;
-  border-radius: 12px;
+.login-glass {
+  margin-left: 48px;
+  background: rgba(255,255,255,0.18);
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 42px 38px 32px 38px;
+  min-width: 340px;
+  max-width: 370px;
   color: #222;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  margin: 40px; 
+  display: flex;
+  flex-direction: column;
+  gap: 0;
 }
 
-
-.login-card h2 {
-    font-size: 28px;
-    font-weight: 600;
-    margin-bottom: 5px;
+.login-glass h1 {
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  line-height: 1;
+  color: #111;
+  letter-spacing: -1px;
 }
 
-.subtitle {
-    font-size: 14px;
-    color: #444;
-    margin-bottom: 30px;
+.login-bold {
+  display: block;
+  font-weight: 900;
+  font-size: 2.3rem;
+  margin: 0;
+  line-height: 0.5;
 }
 
-form label {
-    font-size: 14px;
-    font-weight: 500;
-    margin-bottom: 5px;
-    display: block;
+.login-subtitle {
+  font-size: 1rem;
+  color: #222;
+  margin-bottom: 32px;
+  margin-top: 20px;
 }
 
-form input {
-    width: 100%;
-    padding: 10px 14px;
-    margin-bottom: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f7f7f7;
-    color: #222;
+.login-label {
+  font-size: 1.01rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  margin-top: 18px;
+  color: #222;
+  letter-spacing: 0.01em;
 }
 
-.password-wrapper {
-    position: relative;
+.login-input-wrapper {
+  position: relative;
 }
 
-.eye-icon {
-    position: absolute;
-    right: 14px;
-    top: 9px;
-    cursor: pointer;
-    opacity: 0.5;
+.login-input {
+  width: 100%;
+  padding: 12px 36px 12px 0;
+  font-size: 1rem;
+  border: none;
+  border-bottom: 2px solid #222;
+  background: transparent;
+  color: #222;
+  outline: none;
+  margin-bottom: 6px;
+  font-weight: 500;
+  transition: border-color 0.2s;
 }
 
-button {
-    width: 100%;
-    padding: 12px;
-    border: none;
-    border-radius: 40px;
-    background: linear-gradient(to right, #5ac488, #39b984);
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background 0.3s;
+.login-input:focus {
+  border-bottom: 2.5px solid #39b984;
 }
 
-button:hover {
-    background: linear-gradient(to right, #49b57a, #2e9f6e);
+.login-eye {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  opacity: 0.6;
+  user-select: none;
 }
 
-.register-link {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 13px;
+.login-btn {
+  margin-top: 32px;
+  width: 100%;
+  padding: 13px;
+  border: none;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.32);
+  color: #111;
+  font-weight: bold;
+  font-size: 1.12rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: background 0.2s;
+  letter-spacing: 0.03em;
 }
 
-/* Responsif untuk layar kecil */
+.login-btn:hover {
+  background: rgba(90,196,136,0.18);
+}
+
+.login-bottom {
+  margin-top: 28px;
+  text-align: left;
+  font-size: 1rem;
+  color: #222;
+}
+
+.login-bottom a {
+  font-weight: bold;
+  color: #111;
+  text-decoration: underline;
+  margin-left: 2px;
+}
+
+.login-error {
+  color: #e74c3c;
+  font-size: 0.97rem;
+  margin-top: 6px;
+  margin-bottom: -12px;
+  font-weight: 500;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .login-page {
-    justify-content: center; /* Tengahin pas layar kecil */
-    padding-left: 0;
+  .login-bg {
+    justify-content: center;
+    align-items: flex-start;
   }
-
-  .login-card {
-    max-width: 90%;
-    padding: 24px;
+  .login-glass {
+    margin: 24px auto;
+    min-width: 90vw;
+    max-width: 98vw;
+    padding: 28px 12px 24px 12px;
   }
 }

@@ -7,12 +7,12 @@ import "../styles/login.css";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
       await signInWithEmailAndPassword(auth, email, password);
       navigate("/dashboard");
@@ -22,31 +22,48 @@ function Login() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-card">
-        <h2>
-          Login to <strong>CarbonCount</strong>
-        </h2>
-        <p className="subtitle">Let’s reduce your carbon!</p>
-
+    <div className="login-bg">
+      <div className="login-glass">
+        <h1>
+          <span className="login-bold">Login to</span><br />
+          <span className="login-bold">CarbonCount</span>
+        </h1>
+        <p className="login-subtitle">Let’s reduce your carbon!</p>
         <form onSubmit={handleLogin}>
-          <label htmlFor="email">Email Address</label>
-          <input type="email" id="email" placeholder="Enter your email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          <div className="login-label">Email Address</div>
+          <input
+            type="email"
+            className="login-input"
+            placeholder="Enter your email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
 
-          <label htmlFor="password">Password</label>
-          <div className="password-wrapper">
-            <input type="password" id="password" placeholder="Enter your password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-            <span className="eye-icon">👁</span>
+          <div className="login-label">Password</div>
+          <div className="login-input-wrapper">
+            <input
+              type={showPass ? "text" : "password"}
+              className="login-input"
+              placeholder="Enter your password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <span
+              className="login-eye"
+              onClick={() => setShowPass(v => !v)}
+              title={showPass ? "Hide" : "Show"}
+            >
+              {showPass ? "🙈" : "👁"}
+            </span>
           </div>
-
-          {error && <p style={{ color: "red", fontSize: "13px" }}>{error}</p>}
-
-          <button type="submit">Login</button>
+          {error && <div className="login-error">{error}</div>}
+          <button className="login-btn" type="submit">Login</button>
         </form>
-
-        <p className="register-link">
+        <div className="login-bottom">
           Don’t have an account? <a href="/register">Sign up</a>
-        </p>
+        </div>
       </div>
     </div>
   );
