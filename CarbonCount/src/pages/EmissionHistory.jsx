@@ -12,30 +12,28 @@ const EmissionHistory = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Ambil data emisi dari Firestore khusus user yang sedang login
   useEffect(() => {
-    const fetchEmissions = async () => {
-      if (!auth.currentUser) {
+    // Gunakan listener auth agar selalu dapat userId yang benar
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
         setData([]);
         setLoading(false);
         return;
       }
       const q = query(
         collection(db, "emissions"),
-        where("userId", "==", auth.currentUser.uid)
+        where("userId", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);
       const emissions = querySnapshot.docs.map(doc => doc.data());
       setData(emissions);
       setLoading(false);
-    };
-    fetchEmissions();
+    });
+    return () => unsubscribe();
   }, []);
 
-  // Hitung total emisi
   const totalEmission = data.reduce((sum, item) => sum + Number(item.emission || 0), 0).toFixed(1);
 
-  // Hitung data untuk Pie Chart
   const categoryTotals = {
     "Konsumsi Makanan": 0,
     "Transportasi": 0,
