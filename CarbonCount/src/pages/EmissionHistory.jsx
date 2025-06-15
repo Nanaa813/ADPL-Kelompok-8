@@ -3,7 +3,7 @@ import { collection, query, where, getDocs, deleteDoc, doc as docRef, updateDoc 
 import { auth, db } from "../firebase-config";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
-import { FaDownload, FaFilter, FaEdit, FaTrash } from "react-icons/fa";
+import { FaFilter, FaEdit, FaTrash } from "react-icons/fa";
 import "../styles/emission-history.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
@@ -116,7 +116,7 @@ const EmissionHistory = () => {
         <div className="summary-box">
           <div className="header">
             <h2>Emission History</h2>
-            <FaDownload className="icon" title="Download" />
+          
           </div>
           <p>Total Emisi Bulan Ini: <strong>{totalThisMonth.toFixed(1)} kg CO₂</strong></p>
           <p>Dibanding bulan lalu: {diffText}</p>
