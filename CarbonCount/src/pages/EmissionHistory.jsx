@@ -13,7 +13,6 @@ const EmissionHistory = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Gunakan listener auth agar selalu dapat userId yang benar
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (!user) {
         setData([]);
@@ -32,8 +31,35 @@ const EmissionHistory = () => {
     return () => unsubscribe();
   }, []);
 
-  const totalEmission = data.reduce((sum, item) => sum + Number(item.emission || 0), 0).toFixed(1);
+  // Fungsi bantu untuk ambil bulan-tahun dari string tanggal
+  const getMonthYear = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    return `${d.getFullYear()}-${d.getMonth() + 1}`; // bulan 1-12
+  };
 
+  const now = new Date();
+  const thisMonth = `${now.getFullYear()}-${now.getMonth() + 1}`;
+  const lastMonthDate = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+  const lastMonth = `${lastMonthDate.getFullYear()}-${lastMonthDate.getMonth() + 1}`;
+
+  // Hitung total emisi bulan ini & bulan lalu
+  const totalThisMonth = data
+    .filter(item => getMonthYear(item.date) === thisMonth)
+    .reduce((sum, item) => sum + Number(item.emission || 0), 0);
+
+  const totalLastMonth = data
+    .filter(item => getMonthYear(item.date) === lastMonth)
+    .reduce((sum, item) => sum + Number(item.emission || 0), 0);
+
+  const diff = (totalThisMonth - totalLastMonth).toFixed(1);
+  const diffText = diff > 0
+    ? `⬆️ +${Math.abs(diff)} kg CO₂ (lebih tinggi)`
+    : diff < 0
+      ? `⬇️ −${Math.abs(diff)} kg CO₂ (lebih rendah)`
+      : "Tidak ada perubahan";
+
+  // Pie chart data
   const categoryTotals = {
     "Konsumsi Makanan": 0,
     "Transportasi": 0,
@@ -70,13 +96,13 @@ const EmissionHistory = () => {
             <h2>Emission History</h2>
             <FaDownload className="icon" title="Download" />
           </div>
-          <p>Total Emisi Bulan Ini: <strong>{totalEmission} kg CO₂</strong></p>
-          <p>Dibanding bulan lalu: ⬇️ −2.4 kg CO₂ (lebih rendah)</p>
+          <p>Total Emisi Bulan Ini: <strong>{totalThisMonth.toFixed(1)} kg CO₂</strong></p>
+          <p>Dibanding bulan lalu: {diffText}</p>
         </div>
 
         <div className="chart-box">
           <h5>Emissions by Category</h5>
-          <Pie data={pieData} />
+          <Pie data={pieData} options={{ maintainAspectRatio: false, plugins: { legend: { position: "bottom" } } }} width={220} height={220} />
         </div>
       </section>
 
