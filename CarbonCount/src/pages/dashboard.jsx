@@ -10,22 +10,22 @@ function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchEmissions = async () => {
-      if (!auth.currentUser) {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (!user) {
         setData([]);
         setLoading(false);
         return;
       }
       const q = query(
         collection(db, "emissions"),
-        where("userId", "==", auth.currentUser.uid)
+        where("userId", "==", user.uid)
       );
       const querySnapshot = await getDocs(q);
       const emissions = querySnapshot.docs.map(doc => doc.data());
       setData(emissions);
       setLoading(false);
-    };
-    fetchEmissions();
+    });
+    return () => unsubscribe();
   }, []);
 
   // Hitung total emisi dan per kategori
