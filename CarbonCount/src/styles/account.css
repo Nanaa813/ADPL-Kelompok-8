@@ -1,32 +1,141 @@
-.account-page {
-  font-family: 'Arial', sans-serif;
-  color: #222;
-}
-
-.account-page h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #118d64;
+.account-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  background: url('../assets/bg-blur.jpg') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
 }
 
 .account-card {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(200, 255, 220, 0.5); /* hijau pastel transparan */
+  backdrop-filter: blur(20px); /* efek blur */
+  border-radius: 20px;
+  padding: 30px 40px;
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.header-section {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 24px;
-  padding: 30px;
-  background-color: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  max-width: 500px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding-bottom: 20px;
 }
 
 .profile-icon {
-  font-size: 80px;
-  color: #118d64;
+  font-size: 60px;
+  color: #555; /* bisa diganti warna lain seperti hijau pastel */
+  background-color: #e0f6e0; /* atau warna background seperti desain */
+  border-radius: 50%;
+  padding: 10px;
 }
 
-.info p {
-  margin: 8px 0;
+.account-text h1 {
+  font-size: 22px;
+  margin: 0;
+}
+
+.account-text p {
+  margin: 2px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+/* Badge + Button */
+.account-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.badge {
+  background-color: #c9f3d3;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.change-pass {
+  background-color: #c9f3d3;
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2e7d32;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.change-pass:hover {
+  background-color: #b2e5c6;
+}
+
+/* Target Section */
+.target-section {
+  margin-top: 30px;
+}
+
+.target-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.target-info {
+  display: flex;
+  justify-content: space-between;
   font-size: 16px;
+  margin-top: 5px;
+}
+
+.target-info .label {
+  font-weight: 500;
+  color: #444;
+}
+
+.target-info .value {
+  font-weight: bold;
+  color: #222;
+}
+
+.status {
+  color: red;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+/* Achievement Section */
+.achievement-section {
+  margin-top: 30px;
+}
+
+.achievement-section h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.achievement-list {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  color: #444;
 }
