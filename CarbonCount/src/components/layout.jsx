@@ -1,11 +1,30 @@
+import { useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
-import { auth } from "../firebase-config";
+import { db, auth } from "../firebase-config";
 import { FaSearch, FaBell, FaUserCircle } from "react-icons/fa";
 import "../styles/dashboard.css";
+import { doc, getDoc } from "firebase/firestore";
 
 function Layout() {
   const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    const fetchName = async () => {
+      if (auth.currentUser) {
+        // Ambil data user dari Firestore (collection "users", doc id = uid)
+        const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
+        if (userDoc.exists()) {
+          setDisplayName(userDoc.data().name);
+        } else {
+          // fallback ke email jika nama tidak ada
+          setDisplayName(auth.currentUser.email);
+        }
+      }
+    };
+    fetchName();
+  }, []);
 
   const handleLogout = () => {
     signOut(auth)
@@ -42,12 +61,11 @@ function Layout() {
         </div>
       </aside>
 
-
       <main className="main-content-wrapper">
         <div className="main-content">
           <header className="topbar">
             <div className="greeting">
-              <h3>Welcome Back, Nana</h3>
+              <h3>Welcome Back, {displayName || "User"}</h3>
               <p>How much carbon usage do you have today?</p>
             </div>
             <div className="topbar-icons">
