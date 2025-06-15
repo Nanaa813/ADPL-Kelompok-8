@@ -1,32 +1,55 @@
 import { useState } from "react";
 import "../styles/emissioninput.css";
 import { FaRegCalendarAlt } from "react-icons/fa";
-
 import { collection, addDoc } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
 
 function EmissionInput() {
   const [date, setDate] = useState("");
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
   const [detail, setDetail] = useState("");
   const [amount, setAmount] = useState("");
   const [unit, setUnit] = useState("");
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+
+  // Contoh konversi sederhana ke emisi CO2 (ganti sesuai kebutuhan)
+  const calculateEmission = (category, amount) => {
+    const n = Number(amount);
+    if (category === "Transportasi") return n * 0.2; // misal 0.2 kg CO2/km
+    if (category === "Konsumsi Listrik") return n * 0.85; // misal 0.85 kg CO2/kWh
+    if (category === "Konsumsi Makanan") return n * 0.001; // misal 0.001 kg CO2/gram
+    return 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSuccess("");
+    setError("");
     try {
+      if (!auth.currentUser) {
+        setError("Anda belum login.");
+        return;
+      }
+      const emission = calculateEmission(category, amount);
       await addDoc(collection(db, "emissions"), {
-        userId: auth.currentUser.uid, // simpan UID user
+        userId: auth.currentUser.uid,
         date,
-        type,
+        category,
         detail,
-        amount,
+        amount: Number(amount),
         unit,
+        emission, // simpan hasil perhitungan emisi
         createdAt: new Date()
       });
-      // reset form atau tampilkan pesan sukses
+      setSuccess("Data emisi berhasil disimpan!");
+      setDate("");
+      setCategory("");
+      setDetail("");
+      setAmount("");
+      setUnit("");
     } catch (err) {
-      // tampilkan pesan error
+      setError("Gagal menyimpan data: " + err.message);
     }
   };
 
@@ -51,11 +74,11 @@ function EmissionInput() {
           </div>
 
           <div className="form-group">
-            <select value={type} onChange={(e) => setType(e.target.value)} required>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} required>
               <option value="">Jenis Aktivitas</option>
-              <option value="transport">Transportasi</option>
-              <option value="electricity">Listrik</option>
-              <option value="food">Makanan</option>
+              <option value="Konsumsi Makanan">Konsumsi Makanan</option>
+              <option value="Transportasi">Transportasi</option>
+              <option value="Konsumsi Listrik">Konsumsi Listrik</option>
             </select>
           </div>
 
@@ -87,6 +110,9 @@ function EmissionInput() {
               <option value="gram">gram</option>
             </select>
           </div>
+
+          {success && <div style={{ color: "green", marginBottom: 8 }}>{success}</div>}
+          {error && <div style={{ color: "red", marginBottom: 8 }}>{error}</div>}
 
           <div className="submit-button">
             <button type="submit">SUBMIT</button>

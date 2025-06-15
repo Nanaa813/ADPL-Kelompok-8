@@ -1,21 +1,10 @@
 import { useEffect, useState } from "react";
-import { Pie } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  ArcElement,
-  Tooltip,
-  Legend
-} from "chart.js";
-import {
-  FaDownload,
-  FaEdit,
-  FaTrash,
-  FaFilter
-} from "react-icons/fa";
-import "../styles/emission-history.css";
-
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { auth, db } from "../firebase-config";
+import { Pie } from "react-chartjs-2";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { FaDownload, FaFilter, FaEdit, FaTrash } from "react-icons/fa";
+import "../styles/emission-history.css";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -73,9 +62,7 @@ const EmissionHistory = () => {
     ]
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <>
@@ -105,8 +92,8 @@ const EmissionHistory = () => {
           <thead>
             <tr>
               <th>Tanggal</th>
-              <th>Aktivitas</th>
               <th>Jenis</th>
+              <th>Detail</th>
               <th>Jumlah</th>
               <th>Emisi (kg CO₂)</th>
               <th>Aksi</th>
@@ -122,7 +109,7 @@ const EmissionHistory = () => {
                 <tr key={i}>
                   <td>{item.date}</td>
                   <td>{item.category}</td>
-                  <td>{item.type}</td>
+                  <td>{item.detail}</td>
                   <td>{item.amount} {item.unit}</td>
                   <td>{item.emission}</td>
                   <td>
