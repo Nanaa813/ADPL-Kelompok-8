@@ -12,6 +12,8 @@ const EmissionHistory = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [editItem, setEditItem] = useState(null);
+  const [sortConfig, setSortConfig] = useState({ key: "date", direction: "asc" });
+  const [showSortMenu, setShowSortMenu] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -100,13 +102,53 @@ const EmissionHistory = () => {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     const { id, ...updateData } = editItem;
-    // Pastikan semua field ada dan bertipe string/number
     updateData.amount = Number(updateData.amount) || 0;
     updateData.emission = Number(updateData.emission) || 0;
     await updateDoc(docRef(db, "emissions", id), updateData);
     setData(data.map(item => item.id === id ? { ...editItem } : item));
     setEditItem(null);
   };
+
+  // Sorting
+  const handleSort = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc"
+    }));
+  };
+
+  const handleSortMenu = (key) => {
+    setSortConfig((prev) => ({
+      key,
+      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc"
+    }));
+    setShowSortMenu(false);
+  };
+
+  const renderSortIcon = (key) => {
+    if (sortConfig.key !== key) return null;
+    return sortConfig.direction === "asc" ? "▲" : "▼";
+  };
+
+  const sortedData = [...data].sort((a, b) => {
+    const { key, direction } = sortConfig;
+    let valA = a[key] ?? "";
+    let valB = b[key] ?? "";
+
+    if (key === "amount" || key === "emission") {
+      valA = Number(valA);
+      valB = Number(valB);
+      return direction === "asc" ? valA - valB : valB - valA;
+    }
+    if (key === "date") {
+      return direction === "asc"
+        ? new Date(valA) - new Date(valB)
+        : new Date(valB) - new Date(valA);
+    }
+    return direction === "asc"
+      ? String(valA).localeCompare(String(valB))
+      : String(valB).localeCompare(String(valA));
+  });
 
   if (loading) return <div>Loading...</div>;
 
@@ -116,7 +158,6 @@ const EmissionHistory = () => {
         <div className="summary-box">
           <div className="header">
             <h2>Emission History</h2>
-          
           </div>
           <p>Total Emisi Bulan Ini: <strong>{totalThisMonth.toFixed(1)} kg CO₂</strong></p>
           <p>Dibanding bulan lalu: {diffText}</p>
@@ -129,29 +170,48 @@ const EmissionHistory = () => {
       </section>
 
       <section className="table-section">
-        <div className="table-header">
+        <div className="table-header" style={{ position: "relative" }}>
           <h4>Riwayat Aktivitas</h4>
-          <FaFilter className="icon" />
+          <FaFilter className="icon" style={{ cursor: "pointer" }} onClick={() => setShowSortMenu(v => !v)} />
+          {showSortMenu && (
+            <div style={{
+              position: "absolute", right: 0, top: 32, background: "#fff", border: "1px solid #eee",
+              borderRadius: 8, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", zIndex: 10, minWidth: 140
+            }}>
+              <div style={{ padding: 8, cursor: "pointer" }} onClick={() => handleSortMenu("date")}>Sortir Tanggal</div>
+              <div style={{ padding: 8, cursor: "pointer" }} onClick={() => handleSortMenu("category")}>Sortir Jenis</div>
+              <div style={{ padding: 8, cursor: "pointer" }} onClick={() => handleSortMenu("amount")}>Sortir Jumlah</div>
+              <div style={{ padding: 8, cursor: "pointer" }} onClick={() => handleSortMenu("emission")}>Sortir Emisi</div>
+            </div>
+          )}
         </div>
 
         <table>
           <thead>
             <tr>
-              <th>Tanggal</th>
-              <th>Jenis</th>
+              <th onClick={() => handleSort("date")} style={{ cursor: "pointer" }}>
+                Tanggal {renderSortIcon("date")}
+              </th>
+              <th onClick={() => handleSort("category")} style={{ cursor: "pointer" }}>
+                Jenis {renderSortIcon("category")}
+              </th>
               <th>Detail</th>
-              <th>Jumlah</th>
-              <th>Emisi (kg CO₂)</th>
+              <th onClick={() => handleSort("amount")} style={{ cursor: "pointer" }}>
+                Jumlah {renderSortIcon("amount")}
+              </th>
+              <th onClick={() => handleSort("emission")} style={{ cursor: "pointer" }}>
+                Emisi (kg CO₂) {renderSortIcon("emission")}
+              </th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {data.length === 0 ? (
+            {sortedData.length === 0 ? (
               <tr>
                 <td colSpan="6" style={{ textAlign: "center" }}>Belum ada data emisi.</td>
               </tr>
             ) : (
-              data.map((item) => (
+              sortedData.map((item) => (
                 <tr key={item.id}>
                   <td>{item.date || "-"}</td>
                   <td>{item.category || "-"}</td>

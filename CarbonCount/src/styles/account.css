@@ -1,105 +1,115 @@
+/* account.css */
+
 .account-container {
   display: flex;
   justify-content: center;
+  align-items: center;
+  min-height: 100vh;
   padding: 40px;
   background: url('../assets/bg-blur.jpg') no-repeat center center;
   background-size: cover;
-  min-height: 100vh;
 }
 
 .account-card {
   width: 100%;
-  max-width: 900px;
-  background: rgba(200, 255, 220, 0.5); /* hijau pastel transparan */
-  backdrop-filter: blur(20px); /* efek blur */
+  max-width: 1000px;
+  background: rgba(240, 255, 240, 0.7); /* hijau muda transparan */
+  backdrop-filter: blur(20px);
   border-radius: 20px;
   padding: 30px 40px;
-  color: #333;
   font-family: 'Segoe UI', sans-serif;
+  color: #333;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-/* Header */
+/* Header Section */
 .header-section {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
   padding-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .profile-icon {
   font-size: 60px;
-  color: #555; /* bisa diganti warna lain seperti hijau pastel */
-  background-color: #e0f6e0; /* atau warna background seperti desain */
-  border-radius: 50%;
+  color: #4caf50;
+  background-color: #d0f5d0;
   padding: 10px;
+  border-radius: 50%;
+}
+
+.account-text {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.account-text h3 {
+  margin: 0;
+  font-size: 20px;
 }
 
 .account-text h1 {
-  font-size: 22px;
-  margin: 0;
+  margin: 5px 0;
+  font-size: 24px;
 }
 
 .account-text p {
-  margin: 2px 0;
+  margin: 3px 0;
   font-size: 14px;
-  color: #555;
+  color: #444;
 }
 
-/* Badge + Button */
 .account-badge {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-end;
+  text-align: right;
 }
 
 .badge {
-  background-color: #c9f3d3;
-  padding: 6px 18px;
-  border-radius: 20px;
+  background-color: #c8facc;
+  padding: 5px 12px;
+  border-radius: 12px;
   font-size: 14px;
   font-weight: 600;
   color: #2e7d32;
+  margin-bottom: 8px;
+  display: inline-block;
 }
 
 .change-pass {
-  background-color: #c9f3d3;
-  padding: 6px 18px;
-  border-radius: 20px;
+  background-color: #4caf50;
+  color: white;
   border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
   font-size: 14px;
-  font-weight: 600;
-  color: #2e7d32;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
 .change-pass:hover {
-  background-color: #b2e5c6;
+  background-color: #43a047;
 }
 
 /* Target Section */
 .target-section {
-  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
-.target-section h3 {
+.target-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
 }
 
 .target-info {
   display: flex;
   justify-content: space-between;
-  font-size: 16px;
-  margin-top: 5px;
+  flex-wrap: wrap;
 }
 
 .target-info .label {
@@ -109,33 +119,34 @@
 
 .target-info .value {
   font-weight: bold;
-  color: #222;
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.target-info .unit {
+  color: #666;
 }
 
 .status {
-  color: red;
   font-weight: bold;
+  color: red;
   margin-top: 5px;
 }
 
 /* Achievement Section */
-.achievement-section {
-  margin-top: 30px;
-}
-
-.achievement-section h3 {
+.achievement-section h4 {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-weight: bold;
-  font-size: 18px;
-  margin-bottom: 10px;
 }
 
 .achievement-list {
   display: flex;
-  gap: 20px;
   flex-wrap: wrap;
+  gap: 16px;
   font-size: 15px;
   color: #444;
 }

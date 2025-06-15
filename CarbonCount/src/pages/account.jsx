@@ -1,48 +1,71 @@
+// Account.jsx
 import "../styles/account.css";
 import { useEffect, useState } from "react";
 import { auth, db } from "../firebase-config";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, collection, query, where, getDocs } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { FaUserCircle } from "react-icons/fa"; // ← ikon profil
+import { FaUserCircle } from "react-icons/fa";
 
 function Account() {
   const [user, setUser] = useState({
     name: "-",
     email: "-",
     city: "-",
-    joined: "-"
+    joinDate: "-"
   });
+  const [totalEmissions, setTotalEmissions] = useState("0 kg CO₂");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    onAuthStateChanged(auth, async (currentUser) => {
-      if (currentUser) {
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          setUser({
-            name: data.name || "-",
-            email: data.email || "-",
-            city: data.city || "-",
-            joined: data.joinedDate || "-"
-          });
-        }
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        setLoading(false);
+        return;
       }
+
+      try {
+        const userDoc = await getDoc(doc(db, "users", firebaseUser.uid));
+        const userData = userDoc.exists() ? userDoc.data() : {};
+
+        setUser({
+          name: userData.name || firebaseUser.displayName || "-",
+          email: userData.email || firebaseUser.email || "-",
+          city: userData.city || "Kendari",
+          joinDate: userData.joinDate || "13 Juni 2024"
+        });
+
+        const q = query(
+          collection(db, "emissions"),
+          where("userId", "==", firebaseUser.uid)
+        );
+        const querySnapshot = await getDocs(q);
+        const emissions = querySnapshot.docs.map(doc => doc.data());
+        const total = emissions.reduce((sum, item) => sum + Number(item.emission || 0), 0);
+        setTotalEmissions(`${total.toFixed(1)} kg CO₂`);
+      } catch (err) {
+        console.error("Gagal mengambil data:", err);
+      }
+
+      setLoading(false);
     });
+
+    return () => unsubscribe();
   }, []);
+
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="account-container">
       <div className="account-card">
         <div className="header-section">
-          {/* Ganti gambar dengan ikon */}
           <FaUserCircle className="profile-icon" />
           <div className="account-text">
             <h3>Account</h3>
             <h1>{user.name}</h1>
             <p>{user.email}</p>
             <p>City: {user.city}</p>
-            <p>Joined: {user.joined}</p>
+            <p>Joined: {user.joinDate}</p>
+            <p>Total Emission: {totalEmissions}</p>
           </div>
           <div className="account-badge">
             <span className="badge">Beginner</span>
