@@ -16,10 +16,10 @@ function Layout() {
         // Ambil data user dari Firestore (collection "users", doc id = uid)
         const userDoc = await getDoc(doc(db, "users", auth.currentUser.uid));
         if (userDoc.exists()) {
-          setDisplayName(userDoc.data().name || auth.currentUser.displayName || auth.currentUser.email || "User");
+          setDisplayName(userDoc.data().name);
         } else {
-          // fallback ke displayName/email jika nama tidak ada di Firestore
-          setDisplayName(auth.currentUser.displayName || auth.currentUser.email || "User");
+          // fallback ke email jika nama tidak ada
+          setDisplayName(auth.currentUser.email);
         }
       }
     };
