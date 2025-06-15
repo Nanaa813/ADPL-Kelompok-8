@@ -1,51 +1,71 @@
 .tips-page {
+  padding: 40px;
+  background: linear-gradient(135deg, #e5fdf4, #d7f4e6);
+  min-height: 100vh;
   font-family: 'Arial', sans-serif;
-  color: #222;
 }
 
-.tips-page h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 30px;
+.tips-title {
   text-align: center;
-  color: #118d64;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  color: #166c4d;
+}
+
+.tips-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 30px;
 }
 
 .tips-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 24px;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
-.tips-card {
-  background-color: #ffffff;
+.tip-card {
+  background: #f0fff6;
   border-radius: 16px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
-  padding: 24px;
-  width: 280px;
-  max-width: 100%;
-  transition: transform 0.2s ease;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.07);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 6px solid #5ac488;
 }
 
-.tips-card:hover {
+.tip-card:hover {
+  background: #e9ffef;
   transform: translateY(-4px);
 }
 
-.tips-card h3 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 14px;
-  color: #1e824c;
+.tip-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.tips-card ul {
-  padding-left: 16px;
-  margin: 0;
+.tip-icon {
+  font-size: 22px;
+  color: #34a36b;
 }
 
-.tips-card li {
-  margin-bottom: 10px;
+.tip-title {
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+}
+
+.tip-content {
+  margin-top: 12px;
   font-size: 14px;
+  color: #444;
   line-height: 1.5;
+}
+
+.expanded {
+  background: #dffced;
+  border-left-color: #2e9f6e;
 }
